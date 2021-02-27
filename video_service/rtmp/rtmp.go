@@ -110,9 +110,9 @@ func CreateRtmpServer(addr string) *RtmpServer {
 		go func() {
 			time.Sleep(1 * time.Second)
 			cmd := exec.Command("ffmpeg", "-v", "verbose", "-i", "rtmp://localhost:1935"+conn.URL.Path, "-c:v", "libx264", "-c:a", "aac", "-ac", "1",
-				"-strict", "-2", "-crf", "18", "-profile:v", "baseline", "-maxrate", "400k", "-bufsize", "835k", "-pix_fmt", "yuv420p",
+				"-strict", "-2", "-crf", "18", "-profile:v", "baseline", "-maxrate", "400k", "-bufsize", "85k", "-pix_fmt", "yuv420p",
 				"-max_muxing_queue_size", "1024",
-				"-flags", "-global_header", "-hls_time", "10", "-hls_list_size", "6", "-hls_wrap", "10", "-start_number", "1", "hls"+conn.URL.Path+".m3u8")
+				"-flags", "-global_header", "-hls_time", "1", "-hls_list_size", "1", "-hls_wrap", "3", "-start_number", "1", "hls"+conn.URL.Path+".m3u8")
 			//err := cmd.Start()
 			var out bytes.Buffer
 			var er bytes.Buffer
