@@ -1,7 +1,7 @@
 # Based on https://ergoz.ru/create-the-smallest-and-secured-golang-docker-image-based-on-scratch/
 FROM golang:latest AS builder
 
-WORKDIR /src/video_service/
+WORKDIR /video_service/
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
