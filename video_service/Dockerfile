@@ -11,9 +11,9 @@ COPY . .
 RUN GOOS=linux go build -o /go/bin/video_service
 
 FROM ubuntu:latest
+RUN apt-get update && apt-get install -y ffmpeg
 # golang:latest
 COPY --from=builder /go/bin/video_service /go/bin/video_service
-RUN apt-get update && apt-get install -y ffmpeg
 
 EXPOSE 80
 ENTRYPOINT ["/go/bin/video_service"]
