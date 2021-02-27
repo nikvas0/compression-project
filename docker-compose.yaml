@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       context: video_service/
     environment:
-      MY_IP: "127.0.0.1"
+      RTMP_SERVER_ADDR: ":1935"
     ports:
       - 8081:80
     networks:
