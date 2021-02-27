@@ -14,3 +14,8 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 video_service/video_service
+manager_service/manager_service
+
+
+hls/
+kek/

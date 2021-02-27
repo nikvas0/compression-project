@@ -3,8 +3,12 @@
 package rtmp
 
 import (
+	"bytes"
+	"fmt"
 	"log"
+	"os/exec"
 	"sync"
+	"time"
 
 	"github.com/VKCOM/joy4/av/avutil"
 	"github.com/VKCOM/joy4/av/pubsub"
@@ -101,6 +105,28 @@ func CreateRtmpServer(addr string) *RtmpServer {
 			c.hasHeader = true
 		}
 		s.mux.Unlock()
+
+		// TODO: переделать
+		go func() {
+			time.Sleep(1 * time.Second)
+			cmd := exec.Command("ffmpeg", "-v", "verbose", "-i", "rtmp://localhost:1935"+conn.URL.Path, "-c:v", "libx264", "-c:a", "aac", "-ac", "1",
+				"-strict", "-2", "-crf", "18", "-profile:v", "baseline", "-maxrate", "400k", "-bufsize", "835k", "-pix_fmt", "yuv420p",
+				"-max_muxing_queue_size", "1024",
+				"-flags", "-global_header", "-hls_time", "10", "-hls_list_size", "6", "-hls_wrap", "10", "-start_number", "1", "hls"+conn.URL.Path+".m3u8")
+			//err := cmd.Start()
+			var out bytes.Buffer
+			var er bytes.Buffer
+			cmd.Stdout = &out
+			cmd.Stderr = &er
+			err := cmd.Run()
+			if err != nil {
+				fmt.Printf("out: %q\n", out.String())
+				fmt.Printf("err: %q\n", er.String())
+				log.Fatal(err)
+			}
+			fmt.Printf("out: %q\n", out.String())
+			fmt.Printf("err: %q\n", er.String())
+		}()
 
 		err = avutil.CopyPackets(c.q, conn)
 		if err != nil {
