@@ -8,8 +8,9 @@ func main() {
 	// cм controller, который будет вызываться из http
 
 	rtmpServer := rtmp.CreateRtmpServer(":1935")
-	//rtmpServer.AddStream("/test")
+	rtmpServer.AddStream("/test")
 	rtmpServer.Run()
+
 	// rtmpToHls := converter.CreateConverter(...)
 
 	// controller := controller.CreateController(rtmp_server, rtmp_to_hls)
