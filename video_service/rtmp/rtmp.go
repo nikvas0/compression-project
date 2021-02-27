@@ -67,7 +67,7 @@ func CreateRtmpServer(addr string) *RtmpServer {
 		s.mux.Lock()
 		c, ok := s.queues[conn.URL.Path]
 		s.mux.Unlock()
-		if !ok {
+		if !ok || c == nil {
 			log.Printf("Not found stream %s\n", conn.URL)
 			return
 		}
@@ -91,11 +91,27 @@ func CreateRtmpServer(addr string) *RtmpServer {
 
 		s.mux.Lock()
 		c, ok := s.queues[conn.URL.Path]
-		if !ok {
+		if !ok || c == nil {
 			log.Printf("Not found stream %v\n", conn.URL.Path)
+			s.mux.Unlock()
+			return
+		}
+		if !c.hasHeader {
+			c.q.WriteHeader(streams)
+			c.hasHeader = true
+		}
+		s.mux.Unlock()
+
+		err = avutil.CopyPackets(c.q, conn)
+		if err != nil {
+			log.Printf("ERROR: %v\n", err)
 			return
 		}
 
+		s.mux.Lock()
+		defer s.mux.Unlock()
+		delete(s.queues, conn.URL.Path)
+		c.q.Close()
 	}
 
 	return s
