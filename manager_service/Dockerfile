@@ -13,5 +13,7 @@ RUN GOOS=linux go build -o /go/bin/manager_service
 FROM golang:latest
 COPY --from=builder /go/bin/manager_service /go/bin/manager_service
 
-EXPOSE 80
+# Export necessary port
+EXPOSE 7171
+
 ENTRYPOINT ["/go/bin/manager_service"]

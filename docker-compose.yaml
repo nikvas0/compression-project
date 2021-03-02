@@ -2,6 +2,15 @@ version: "3"
 
 services:
 
+  manager_service:
+    build:
+      dockerfile: Dockerfile
+      context: manager_service/
+    ports:
+      - 7191:7191
+    networks:
+      - mynet
+
   video_service:
     build:
       dockerfile: Dockerfile

@@ -6,4 +6,4 @@
 
 В vlc можно открыть http://localhost:8082/hls/test.m3u8
 
-Запуск docker-compuse build && docker-compuse up
+Запуск docker-compose build && docker-compose up
