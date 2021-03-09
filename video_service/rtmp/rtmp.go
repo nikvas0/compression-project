@@ -109,10 +109,14 @@ func CreateRtmpServer(addr string) *RtmpServer {
 		// TODO: переделать
 		go func() {
 			time.Sleep(1 * time.Second)
-			cmd := exec.Command("ffmpeg", "-v", "verbose", "-i", "rtmp://localhost:1935"+conn.URL.Path, "-c:v", "libx264", "-c:a", "aac", "-ac", "1",
-				"-strict", "-2", "-crf", "18", "-profile:v", "baseline", "-maxrate", "400k", "-bufsize", "85k", "-pix_fmt", "yuv420p",
-				"-max_muxing_queue_size", "1024",
-				"-flags", "-global_header", "-hls_time", "1", "-hls_list_size", "1", "-hls_wrap", "3", "-start_number", "1", "hls"+conn.URL.Path+".m3u8")
+			cmd := exec.Command("ffmpeg", "-v", "verbose", "-i", "rtmp://localhost:1935"+conn.URL.Path,
+				"-vf", "scale=w=640:h=360:force_original_aspect_ratio=decrease", "-c:a", "aac", "-ac", "1", "-c:v", "libx264", "-profile:v", "main", "-crf", "18",
+				"-b:v", "800k", "-maxrate", "400k", "-bufsize", "80k", "-b:a", "80k",
+				"-max_muxing_queue_size", "1024", "-flags", "-global_header", "-hls_time", "1", "-hls_list_size", "1", "-hls_wrap", "3", "-start_number", "1", "hls"+conn.URL.Path+"_360p.m3u8",
+				"-vf", "scale=w=1280:h=720:force_original_aspect_ratio=decrease", "-c:a", "aac", "-ac", "1", "-c:v", "libx264", "-profile:v", "main", "-crf", "18",
+				"-b:v", "1600k", "-maxrate", "800k", "-bufsize", "80k", "-b:a", "80k",
+				"-max_muxing_queue_size", "1024", "-flags", "-global_header", "-hls_time", "1", "-hls_list_size", "1", "-hls_wrap", "3", "-start_number", "1", "hls"+conn.URL.Path+"_720p.m3u8")
+
 			//err := cmd.Start()
 			var out bytes.Buffer
 			var er bytes.Buffer
