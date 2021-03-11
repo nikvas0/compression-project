@@ -10,7 +10,7 @@
 
 3) В vlc/ffplay можно открыть http://localhost:8082/hls/test_360p.m3u8 и http://localhost:8082/hls/test_720p.m3u8.
 Они отличаются значениями разрешения и битрейта.
-Таже можно теперь открыть трансляции в браузере по ссылкам http://localhost:7191/video?path=test_720p и http://localhost:7191/video?path=test_360p.
+Таже можно теперь открыть трансляции в браузере по ссылкам http://localhost:7191/video?path=test&r=720p и http://localhost:7191/video?path=test&r=360p.
 
 
 
