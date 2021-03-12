@@ -30,7 +30,18 @@ func BasicVideo(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, `
 	<html>
+	<head>
+	<style>
+	table, td, th {
+	border: 1px solid black;
+	}
+
+	table {
+	border-collapse: collapse;
+	}
+	</style>
 	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+	</head>
 	<video id="video" muted autoplay></video>
 	<script>
 	var video = document.getElementById('video');
