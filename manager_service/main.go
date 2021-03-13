@@ -28,6 +28,7 @@ func BasicVideo(w http.ResponseWriter, r *http.Request) {
 		return "http://localhost:7191/video?path=" + r.URL.Query()["path"][0] + "&r=" + resolution
 	}
 
+	// unmute https://stackoverflow.com/a/39042127
 	fmt.Fprintf(w, `
 	<html>
 	<head>
@@ -42,22 +43,25 @@ func BasicVideo(w http.ResponseWriter, r *http.Request) {
 	</style>
 	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 	</head>
-	<video id="video" muted autoplay></video>
+	<video id="video"></video>
 	<script>
 	var video = document.getElementById('video');
-	if(Hls.isSupported()) {
-		var hls = new Hls();
-		hls.loadSource('%s');
-		hls.attachMedia(video);
-		hls.on(Hls.Events.MANIFEST_PARSED,function() {
-		video.play();
-	});
-	}
-	else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-		video.src = '%s';
-		video.addEventListener('loadedmetadata',function() {
-		video.play();
+	
+	function playVideo(){
+		if(Hls.isSupported()) {
+			var hls = new Hls();
+			hls.loadSource('%s');
+			hls.attachMedia(video);
+			hls.on(Hls.Events.MANIFEST_PARSED,function() {
+			video.play();
 		});
+		}
+		else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			video.src = '%s';
+			video.addEventListener('loadedmetadata',function() {
+			video.play();
+			});
+		}
 	}
 	</script>
 
@@ -65,9 +69,11 @@ func BasicVideo(w http.ResponseWriter, r *http.Request) {
 	<tr>
 		<td><a href="%s">360p (400k)</a>  </td>
 		<td><a href="%s">720p (800k)</a>  </td>
+		<td><a onclick="playVideo()">Play</a></td>
 	</tr>
 	</table>
 	</html>
+
 	`, video, video, get_page("360p"), get_page("720p"))
 }
 
