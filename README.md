@@ -10,7 +10,7 @@
 
 3) В vlc/ffplay можно открыть http://localhost:8082/hls/test_360p.m3u8 и http://localhost:8082/hls/test_720p.m3u8.
 Они отличаются значениями разрешения и битрейта.
-Таже можно теперь открыть трансляции в браузере по ссылкам http://localhost:7191/video?path=test&r=720p и http://localhost:7191/video?path=test&r=360p.
+Таже можно теперь открыть трансляции в браузере по ссылкам http://localhost:7191/video?path=test&r=720p и http://localhost:7191/video?path=test&r=360p и нажать play (браузеры запрещают autoplay без mute).
 
 
 
@@ -21,7 +21,7 @@
 
 - [x] 4 балла - сервер принимает поток видео и ретранслирует его
 
-- [ ] +2 балла - клиент --- TODO: отдача из manager_service \<video\>: нужно доделать mute/unmute + где-то форма для создания своего стрима
+- [ ] +2 балла - клиент --- TODO: где-то форма для создания своего стрима (просто кнопка, которая выдает ссылку rtmp://localhost:1935/<id> и http://localhost:8082/hls/<id>_360p.m3u8)
 
 - [ ] +2 балла - CDN
 
