@@ -72,6 +72,9 @@ func BasicVideo(w http.ResponseWriter, r *http.Request) {
 		<td><a onclick="playVideo()">Play</a></td>
 	</tr>
 	</table>
+	
+	<div>Chat...</div>
+	
 	</html>
 
 	`, video, video, get_page("360p"), get_page("720p"))
