@@ -4,13 +4,15 @@
 
 0) Запуск docker-compose build && docker-compose up
 
-1) Создаем стрим curl -v localhost:8081/start_stream?path=test
+1) Заходим на http://localhost:7191/home
 
-2) В obs studio транслируем на сервер rtmp://localhost:1935 с key = /test
+2) Создаем стрим из интерфейса
 
-3) В vlc/ffplay можно открыть http://localhost:8082/hls/test_360p.m3u8 и http://localhost:8082/hls/test_720p.m3u8.
+3) В obs studio транслируем на сервер rtmp://localhost:1935 с key = /your_stream_name
+
+4) В vlc/ffplay можно открыть http://localhost:8082/hls/test_360p.m3u8 и http://localhost:8082/hls/test_720p.m3u8.
 Они отличаются значениями разрешения и битрейта.
-Таже можно теперь открыть трансляции в браузере по ссылкам http://localhost:7191/video?path=test&r=720p и http://localhost:7191/video?path=test&r=360p и нажать play (браузеры запрещают autoplay без mute).
+Также теперь можно зайти через интерфейс на http://localhost:7191/streams и выбрать нужный стрим, после чего нажать play (браузеры запрещают autoplay без mute).
 
 
 

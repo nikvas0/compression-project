@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stream</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+    <section class="hero is-primary is-fullheight" style="background-color:#9146ff;">
+
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+
+                    <div id="navbarMenuHeroA" class="navbar-menu">
+						<div class="navbar-end">
+							<a href="http://localhost:7191/home" class="navbar-item">
+								Home
+							</a>
+							<a href="http://localhost:7191/streams" class="navbar-item">
+								Streams
+							</a>
+						</div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <video id="video" class="video"></video>
+                <script>
+                var video = document.getElementById('video');
+                
+                function playVideo(){
+                    if(Hls.isSupported()) {
+                        var hls = new Hls();
+                        hls.loadSource('%s');
+                        hls.attachMedia(video);
+                        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                        video.play();
+                    });
+                    }
+                    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        video.src = '%s';
+                        video.addEventListener('loadedmetadata',function() {
+                        video.play();
+                        });
+                    }
+                }
+                </script>
+            
+                <table>
+                <tr>
+                    <td><a href="%s">360p (400k)</a>  </td>
+                    <td><a href="%s">720p (800k)</a>  </td>
+                    <td><a onclick="playVideo()">Play</a></td>
+                </tr>
+                </table>
+                
+                <div>Chat...</div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
