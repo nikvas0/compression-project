@@ -74,7 +74,6 @@ func (s *Server) StopStream(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "error requesting video_service stop_stream")
 		return
 	}
-	// TODO erase from streams
 	var newStreams []string
 	for _, stream := range s.streams {
 		if stream != path {
@@ -106,6 +105,8 @@ func (s *Server) Streams(w http.ResponseWriter, r *http.Request) {
 		streamsTable += "<tr>"
 		streamsTable += fmt.Sprintf(`<td>%s</td>`, stream)
 		streamsTable += fmt.Sprintf(`<td><a href="http://localhost:7191/video?path=%s&r=360p">360p (400k)</a></td>`, stream)
+		streamsTable += fmt.Sprintf(`<td><a href="http://localhost:7191/video?path=%s&r=720p">720p (800k)</a></td>`, stream)
+		streamsTable += fmt.Sprintf(`<td>http://localhost:8082/hls/%s_360p.m3u8</td>`, stream)
 		streamsTable += "</tr>"
 	}
 	streamsTable += "</table>"
