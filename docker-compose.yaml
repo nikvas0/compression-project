@@ -26,7 +26,16 @@ services:
       - ./hls:/hls
     networks:
       - mynet
-  
+
+  chat_service:
+    build:
+      dockerfile: Dockerfile
+      context: chat_service/
+    ports:
+      - "8083:8083"
+    networks:
+      - mynet
+
   web:
     image: nginx
     volumes:

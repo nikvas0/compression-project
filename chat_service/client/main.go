@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"flag"
 	"fmt"
 	"github.com/nikvas0/compression-project/chat_service/protobufs"
 	"google.golang.org/grpc"
@@ -55,7 +54,7 @@ func connect(user *chat.User, room string) error {
 func ConnectUser(name string, room string) {
 	timestamp := time.Now()
 	id := sha256.Sum256([]byte(timestamp.String() + name))
-	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8083", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Couldn't connect to service: %v", err)
 	}
@@ -89,11 +88,4 @@ func SendMessage(user string, room string, message string) {
 	if err != nil {
 		fmt.Printf("Error sending message: %v", err)
 	}
-}
-
-func main() {
-	name := flag.String("N", "Guest", "")
-	room := flag.String("R", "Default", "")
-	flag.Parse()
-	ConnectUser(*name, *room)
 }

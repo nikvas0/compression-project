@@ -62,9 +62,32 @@
                     <td><a onclick="playVideo()">Play</a></td>
                 </tr>
                 </table>
-                
-                <div>Chat...</div>
             </div>
+
+            <div class="chatbox">
+                <div id="chat" style="width: 600px; height: 400px; overflow-y: scroll; background-color: white; color: black">
+                </div>
+                <form name="message" method="POST">
+                    <label for="username">Username</label>
+                    <input type="text" name="username" id="username" />
+                    <label for="msg">Message</label>
+                    <input type="text" name="msg" id="msg" />
+                    <input type="submit" name="button" value="Submit" id="submitmsg" />
+                </form>
+            </div>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#submitmsg").click(function(){
+                        var clientmsg = $("#msg").val();
+                        var username = $("#username").val();
+                        $.post("http://localhost:7191/sendmessage?path=%s&user=" + username + "&message=" + clientmsg);
+                        $("#msg").attr("value", "");
+                        $("#username").attr("value", "");
+                        return false;
+                    });
+                });
+            </script>
         </div>
     </section>
 </body>

@@ -2,6 +2,8 @@ package http
 
 import (
 	"fmt"
+	"github.com/nikvas0/compression-project/chat_service/client"
+
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -24,6 +26,7 @@ func (s *Server) ListenAndServe(port string) {
 	http.HandleFunc("/streams", s.Streams)
 	http.HandleFunc("/video", s.Video)
 	http.HandleFunc("/stream", s.Stream) // TODO
+	http.HandleFunc("/sendmessage", SendMessage)
 
 	log.Println("listening in port: " + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
@@ -32,10 +35,10 @@ func (s *Server) ListenAndServe(port string) {
 func (s *Server) Home(w http.ResponseWriter, r *http.Request) {
 	pageHtml, err := ioutil.ReadFile("../templates/home.html")
 	fmt.Println(err)
-    if err != nil {
-        badRequest(w, "error reading home.html")
+	if err != nil {
+		badRequest(w, "error reading home.html")
 		return
-    }
+	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, string(pageHtml))
 }
@@ -55,10 +58,10 @@ func (s *Server) StartStream(w http.ResponseWriter, r *http.Request) {
 
 	pageHtml, err := ioutil.ReadFile("../templates/message.html")
 	fmt.Println(err)
-    if err != nil {
-        badRequest(w, "error reading message.html")
+	if err != nil {
+		badRequest(w, "error reading message.html")
 		return
-    }
+	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, string(pageHtml), "Stream was started successfully.")
 }
@@ -84,10 +87,10 @@ func (s *Server) StopStream(w http.ResponseWriter, r *http.Request) {
 
 	pageHtml, err := ioutil.ReadFile("../templates/message.html")
 	fmt.Println(err)
-    if err != nil {
-        badRequest(w, "error reading message.html")
+	if err != nil {
+		badRequest(w, "error reading message.html")
 		return
-    }
+	}
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, string(pageHtml), "Stream was stopped successfully.")
 }
@@ -95,10 +98,10 @@ func (s *Server) StopStream(w http.ResponseWriter, r *http.Request) {
 func (s *Server) Streams(w http.ResponseWriter, r *http.Request) {
 	pageHtml, err := ioutil.ReadFile("../templates/streams.html")
 	fmt.Println(err)
-    if err != nil {
-        badRequest(w, "error reading streams.html")
+	if err != nil {
+		badRequest(w, "error reading streams.html")
 		return
-    }
+	}
 
 	streamsTable := "<table>"
 	for _, stream := range s.streams {
@@ -130,15 +133,24 @@ func (s *Server) Video(w http.ResponseWriter, r *http.Request) {
 	// unmute https://stackoverflow.com/a/39042127
 	pageHtml, err := ioutil.ReadFile("../templates/video.html")
 	fmt.Println(err)
-    if err != nil {
-        badRequest(w, "error reading video.html")
+	if err != nil {
+		badRequest(w, "error reading video.html")
 		return
-    }
-	fmt.Fprintf(w, string(pageHtml), video, video, get_page("360p"), get_page("720p"))
+	}
+	fmt.Fprintf(w, string(pageHtml), video, video, get_page("360p"), get_page("720p"), video)
 }
 
 func (s *Server) Stream(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+}
+
+func SendMessage(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	room := r.URL.Query()["path"][0]
+	user := r.URL.Query()["user"][0]
+	message := r.URL.Query()["message"][0]
+	fmt.Println(room, user, message)
+	client.SendMessage(user, room, message)
 }
 
 func badRequest(w http.ResponseWriter, err string) {

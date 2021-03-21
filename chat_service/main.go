@@ -71,10 +71,11 @@ func main() {
 
 	server := &Server{connections}
 	grpcServer := grpc.NewServer()
-	listener, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":8083")
 	if err != nil {
 		log.Fatalf("error creating the server %v", err)
 	}
 	chat.RegisterBroadcastServer(grpcServer, server)
+	log.Println("STARTING CHAT")
 	grpcServer.Serve(listener)
 }
