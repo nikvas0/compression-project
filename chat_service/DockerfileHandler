@@ -7,11 +7,11 @@ RUN go mod download
 
 COPY . .
 
-RUN GOOS=linux go build -o /go/bin/chat_service
+RUN GOOS=linux go build -o /go/bin/chat_service ./handler
 
 FROM golang:latest
 COPY --from=builder /go/bin/chat_service /go/bin/chat_service
 
-EXPOSE 9080
+EXPOSE 7192
 
 ENTRYPOINT ["/go/bin/chat_service"]

@@ -67,7 +67,7 @@
             <div class="chatbox">
                 <div id="chat" style="width: 600px; height: 400px; overflow-y: scroll; background-color: white; color: black">
                 </div>
-                <form name="message" method="POST">
+                <form name="message">
                     <label for="username">Username</label>
                     <input type="text" name="username" id="username" />
                     <label for="msg">Message</label>
@@ -81,7 +81,7 @@
                     $("#submitmsg").click(function(){
                         var clientmsg = $("#msg").val();
                         var username = $("#username").val();
-                        $.post("http://localhost:7191/sendmessage?path=%s&user=" + username + "&message=" + clientmsg);
+                        $.post("http://localhost:7192/sendmessage?path=%s&user=" + username + "&message=" + clientmsg);
                         $("#msg").attr("value", "");
                         $("#username").attr("value", "");
                         return false;

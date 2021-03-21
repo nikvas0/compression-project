@@ -2,8 +2,6 @@ package http
 
 import (
 	"fmt"
-	"github.com/nikvas0/compression-project/chat_service/client"
-
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -26,7 +24,6 @@ func (s *Server) ListenAndServe(port string) {
 	http.HandleFunc("/streams", s.Streams)
 	http.HandleFunc("/video", s.Video)
 	http.HandleFunc("/stream", s.Stream) // TODO
-	http.HandleFunc("/sendmessage", SendMessage)
 
 	log.Println("listening in port: " + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
@@ -137,20 +134,11 @@ func (s *Server) Video(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "error reading video.html")
 		return
 	}
-	fmt.Fprintf(w, string(pageHtml), video, video, get_page("360p"), get_page("720p"), video)
+	fmt.Fprintf(w, string(pageHtml), video, video, get_page("360p"), get_page("720p"), r.URL.Query()["path"][0])
 }
 
 func (s *Server) Stream(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-}
-
-func SendMessage(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	room := r.URL.Query()["path"][0]
-	user := r.URL.Query()["user"][0]
-	message := r.URL.Query()["message"][0]
-	fmt.Println(room, user, message)
-	client.SendMessage(user, room, message)
 }
 
 func badRequest(w http.ResponseWriter, err string) {

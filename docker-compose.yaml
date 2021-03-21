@@ -32,7 +32,16 @@ services:
       dockerfile: Dockerfile
       context: chat_service/
     ports:
-      - "8083:8083"
+      - "9080:9080"
+    networks:
+      - mynet
+
+  chat_handler:
+    build:
+      dockerfile: DockerfileHandler
+      context: chat_service/
+    ports:
+      - "7192:7192"
     networks:
       - mynet
 

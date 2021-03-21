@@ -54,7 +54,7 @@ func connect(user *chat.User, room string) error {
 func ConnectUser(name string, room string) {
 	timestamp := time.Now()
 	id := sha256.Sum256([]byte(timestamp.String() + name))
-	conn, err := grpc.Dial("localhost:8083", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:9080", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Couldn't connect to service: %v", err)
 	}
