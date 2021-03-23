@@ -16,12 +16,14 @@ var clients map[string]chat.BroadcastClient
 var waits map[string]*sync.WaitGroup
 var usersToId map[string]string
 var idToUsers map[string]string
+var Messages map[string][]*chat.Message
 
 func init() {
 	clients = make(map[string]chat.BroadcastClient)
 	waits = make(map[string]*sync.WaitGroup)
 	usersToId = make(map[string]string)
 	idToUsers = make(map[string]string)
+	Messages = make(map[string][]*chat.Message)
 }
 
 func connect(user *chat.User, room string) error {
@@ -44,7 +46,7 @@ func connect(user *chat.User, room string) error {
 				break
 			}
 			if msg.Room == room {
-				fmt.Printf("%v : %s\n", msg.User.DisplayName, msg.Message)
+				log.Printf("%v : %s\n", msg.User.DisplayName, msg.Message)
 			}
 		}
 	}(stream)
@@ -88,4 +90,5 @@ func SendMessage(user string, room string, message string) {
 	if err != nil {
 		fmt.Printf("Error sending message: %v", err)
 	}
+	Messages[msg.Room] = append(Messages[msg.Room], msg)
 }

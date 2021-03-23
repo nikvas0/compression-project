@@ -35,6 +35,8 @@ services:
       - "9080:9080"
     networks:
       - mynet
+    depends_on:
+      - manager_service
 
   chat_handler:
     build:
@@ -44,6 +46,8 @@ services:
       - "7192:7192"
     networks:
       - mynet
+    depends_on:
+      - chat_service
 
   web:
     image: nginx
