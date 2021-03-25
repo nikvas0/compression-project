@@ -67,7 +67,9 @@ func ConnectUser(name string, room string) {
 	usersToId[user.DisplayName] = user.Id
 	idToUsers[user.Id] = user.DisplayName
 	clients[user.Id] = chat.NewBroadcastClient(conn)
-	connect(user, room)
+	if err := connect(user, room); err != nil {
+		log.Fatalf("Error connecting user: %v", err)
+	}
 }
 
 func SendMessage(user string, room string, message string) {

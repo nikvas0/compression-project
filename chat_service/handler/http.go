@@ -18,7 +18,9 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 		user := r.URL.Query()["user"][0]
 		message := r.URL.Query()["message"][0]
 		fmt.Println(room, user, message)
-		client.SendMessage(user, room, message)
+		if len(message) != 0 && len(user) != 0 {
+			client.SendMessage(user, room, message)
+		}
 	}
 	return
 }
@@ -29,9 +31,12 @@ func GetMessages(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("Content-Type", "application/json")
 		room := r.URL.Query()["path"][0]
-		_ = json.NewEncoder(w).Encode(client.Messages[room])
+		offset, err := strconv.Atoi(r.URL.Query()["offset"][0])
+		if err != nil {
+			log.Fatal("offset is not a number")
+		}
+		_ = json.NewEncoder(w).Encode(client.Messages[room][offset:])
 		fmt.Println(client.Messages[room])
-		client.Messages[room] = nil
 	}
 	return
 }
