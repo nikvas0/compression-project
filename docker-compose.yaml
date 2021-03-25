@@ -6,6 +6,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: manager_service/
+    environment:
+      HOST: "localhost"
     ports:
       - 7191:7191
     volumes:
@@ -19,6 +21,7 @@ services:
       context: video_service/
     environment:
       RTMP_SERVER_ADDR: ":1935"
+      HOST: "localhost"
     ports:
       - 1935:1935
       - 8081:80
@@ -31,6 +34,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: chat_service/
+    environment:
+      HOST: "localhost"
     ports:
       - "9080:9080"
     networks:
@@ -42,6 +47,8 @@ services:
     build:
       dockerfile: DockerfileHandler
       context: chat_service/
+    environment:
+      HOST: "localhost"
     ports:
       - "7192:7192"
     networks:

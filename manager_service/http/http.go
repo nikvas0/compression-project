@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 )
 
 // Describes Server.
@@ -37,7 +39,7 @@ func (s *Server) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, string(pageHtml))
+	fmt.Fprint(w, strings.ReplaceAll(string(pageHtml), "localhost", os.Getenv("HOST")))
 }
 
 func (s *Server) StartStream(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +62,7 @@ func (s *Server) StartStream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, string(pageHtml), "Stream was started successfully.")
+	fmt.Fprintf(w, strings.ReplaceAll(string(pageHtml), "localhost", os.Getenv("HOST")), "Stream was started successfully.")
 }
 
 func (s *Server) StopStream(w http.ResponseWriter, r *http.Request) {
@@ -89,7 +91,7 @@ func (s *Server) StopStream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, string(pageHtml), "Stream was stopped successfully.")
+	fmt.Fprintf(w, strings.ReplaceAll(string(pageHtml), "localhost", os.Getenv("HOST")), "Stream was stopped successfully.")
 }
 
 func (s *Server) Streams(w http.ResponseWriter, r *http.Request) {
@@ -104,27 +106,27 @@ func (s *Server) Streams(w http.ResponseWriter, r *http.Request) {
 	for _, stream := range s.streams {
 		streamsTable += "<tr>"
 		streamsTable += fmt.Sprintf(`<td>%s</td>`, stream)
-		streamsTable += fmt.Sprintf(`<td><a href="http://localhost:7191/video?path=%s&r=360p">360p (400k)</a></td>`, stream)
-		streamsTable += fmt.Sprintf(`<td><a href="http://localhost:7191/video?path=%s&r=720p">720p (800k)</a></td>`, stream)
-		streamsTable += fmt.Sprintf(`<td>http://localhost:8082/hls/%s_360p.m3u8</td>`, stream)
+		streamsTable += fmt.Sprintf(`<td><a href="http://%s:7191/video?path=%s&r=360p">360p (400k)</a></td>`, os.Getenv("HOST"), stream)
+		streamsTable += fmt.Sprintf(`<td><a href="http://%s:7191/video?path=%s&r=720p">720p (800k)</a></td>`, os.Getenv("HOST"), stream)
+		streamsTable += fmt.Sprintf(`<td>http://%s:8082/hls/%s_360p.m3u8</td>`, os.Getenv("HOST"), stream)
 		streamsTable += "</tr>"
 	}
 	streamsTable += "</table>"
 
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, string(pageHtml), streamsTable)
+	fmt.Fprintf(w, strings.ReplaceAll(string(pageHtml), "localhost", os.Getenv("HOST")), streamsTable)
 }
 
 func (s *Server) Video(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	get_video := func(resolution string) string {
-		return "http://localhost:8082/hls/" + r.URL.Query()["path"][0] + "_" + resolution + ".m3u8"
+		return "http://" + os.Getenv("HOST") + ":8082/hls/" + r.URL.Query()["path"][0] + "_" + resolution + ".m3u8"
 	}
 	video := get_video(r.URL.Query()["r"][0])
 
 	get_page := func(resolution string) string {
-		return "http://localhost:7191/video?path=" + r.URL.Query()["path"][0] + "&r=" + resolution
+		return "http://" + os.Getenv("HOST") + ":7191/video?path=" + r.URL.Query()["path"][0] + "&r=" + resolution
 	}
 
 	// unmute https://stackoverflow.com/a/39042127
@@ -134,7 +136,7 @@ func (s *Server) Video(w http.ResponseWriter, r *http.Request) {
 		badRequest(w, "error reading video.html")
 		return
 	}
-	fmt.Fprintf(w, string(pageHtml), video, video, get_page("360p"), get_page("720p"), r.URL.Query()["path"][0])
+	fmt.Fprintf(w, strings.ReplaceAll(string(pageHtml), "localhost", os.Getenv("HOST")), video, video, get_page("360p"), get_page("720p"), r.URL.Query()["path"][0])
 }
 
 func (s *Server) Stream(w http.ResponseWriter, r *http.Request) {
